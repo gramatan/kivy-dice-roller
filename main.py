@@ -71,12 +71,32 @@ class DiceRollerApp(App):
         popup.open()
 
     def show_clear_log_popup(self, instance):
+        # Create the main layout.
+        layout = BoxLayout(orientation='vertical')
+
+        # Add the label to the layout.
+        layout.add_widget(Label(text='Are you sure you want to clear the log?'))
+
+        # Create a layout for the buttons.
+        button_layout = BoxLayout(orientation='horizontal', size_hint=(1, 0.2))
+
+        # Add the buttons to the button layout.
+        button_layout.add_widget(Button(text='Clear', on_press=self.clear_log))
+        button_layout.add_widget(Button(text='Cancel'))
+
+        # Add the button layout to the main layout.
+        layout.add_widget(button_layout)
+
+        # Create the popup.
         popup = Popup(title='Confirm Clear',
-                      content=Label(text='Are you sure you want to clear the log?'),
+                      content=layout,
                       size_hint=(None, None), size=(400, 200),
                       auto_dismiss=False)
-        popup.content.add_widget(Button(text='Cancel', on_press=popup.dismiss))
-        popup.content.add_widget(Button(text='Clear', on_press=self.clear_log, on_release=popup.dismiss))
+
+        # Bind the 'on_release' event of the buttons to the 'dismiss' method of the popup.
+        for btn in button_layout.children:
+            btn.bind(on_release=popup.dismiss)
+
         popup.open()
 
     def clear_log(self, instance):
